@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>okko.uzapi</name>
+    </assembly>
+    <members>
+        <member name="M:okko.uzapi.Controllers.HomeController.Get">
+            <summary>
+            Gets Values 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:okko.uzapi.Controllers.HomeController.Get(System.Int32)">
+            <summary>
+            Get a value
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:okko.uzapi.Controllers.HomeV2Controller.Get">
+            <summary>
+            Gets Values 
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

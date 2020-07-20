@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using okko.uzapi.Models;
 
 namespace okko.uzapi.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDBContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> option) : base(option)
         {
         }
+        public DbSet<Persons> Persons { get; set; }
     }
-
 }

@@ -1,9 +1,6 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using okko.uzapi.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,15 +8,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-using System.IO;
 using okko.uzapi.Contracts;
 using okko.uzapi.Services;
 using okko.uzapi.Mappings;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using okko.uzapi.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace okko.uzapi
 {
@@ -35,12 +32,12 @@ namespace okko.uzapi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<ApplicationDBContext>(options =>
                 options.UseOracle(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDBContext>();
 
             services.AddCors(o => {
                 o.AddPolicy("CorsPolicy",
@@ -81,6 +78,7 @@ namespace okko.uzapi
             //});
 
             services.AddSingleton<ILoggerService, LoggerService>();
+            services.AddSingleton<IEmailSender, SmtpEmailSender>();
             //services.AddScoped<IAuthorRepository, AuthorRepository>();
             //services.AddScoped<IBookRepository, BookRepository>();
 

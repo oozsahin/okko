@@ -1,0 +1,121 @@
+CREATE TABLE incapp.AspNetRoles (   
+  Id VARCHAR2(128) NOT NULL,  
+  Name VARCHAR2(256) NOT NULL  
+ ) pctfree 20 pctused 70 tablespace INCTBL;  
+ create unique index incapp.pk_aspnetroles on incapp.AspNetRoles (  
+  id  
+ ) pctfree 10 tablespace incidx;  
+ alter table incapp.AspNetRoles add (  
+  constraint pk_aspnetroles  
+  primary key (id)  
+ );  
+ create public synonym AspNetRoles for incapp.AspNetRoles;  
+ grant select,insert,update,delete on aspnetroles to webapps;  
+ CREATE TABLE incapp.AspNetUserRoles (   
+  UserId VARCHAR2(128) NOT NULL,  
+  RoleId VARCHAR2(128) NOT NULL  
+ ) pctfree 20 pctused 70 tablespace INCTBL;  
+ create unique index incapp.pk_AspNetUserRoles on incapp.AspNetUserRoles (  
+  UserId, RoleId  
+ ) pctfree 10 tablespace incidx;  
+ alter table incapp.AspNetUserRoles add (  
+  constraint pk_AspNetUserRoles  
+  primary key (UserId, RoleId)  
+ );  
+ create public synonym AspNetUserRoles for incapp.AspNetUserRoles;  
+ grant select,insert,update,delete on incapp.AspNetUserRoles to webapps;  
+ CREATE TABLE incapp.AspNetUsers (   
+  Id VARCHAR2(128) NOT NULL,  
+  Email VARCHAR2(256) NULL,  
+  EmailConfirmed NUMBER(1) NOT NULL,  
+  PasswordHash VARCHAR2(256) NULL,  
+  SecurityStamp VARCHAR2(256) NULL,  
+  PhoneNumber VARCHAR2(256) NULL,  
+  PhoneNumberConfirmed NUMBER(1) NOT NULL,  
+  TwoFactorEnabled NUMBER(1) NOT NULL,  
+  LockoutEndDateUtc TIMESTAMP(7) NULL,  
+  LockoutEnabled NUMBER(1) NOT NULL,  
+  AccessFailedCount NUMBER(10) NOT NULL,  
+  UserName VARCHAR2(256) NOT NULL  
+ ) pctfree 20 pctused 70 tablespace INCTBL;  
+ create unique index incapp.pk_AspNetUsers on incapp.AspNetUsers (  
+  id  
+ ) pctfree 10 tablespace incidx;  
+ alter table incapp.AspNetUsers add (  
+  constraint pk_AspNetUsers  
+  primary key (id)  
+ );  
+ create public synonym AspNetUsers for incapp.AspNetUsers;  
+ grant select,insert,update,delete on incapp.AspNetUsers to webapps;  
+ CREATE TABLE AspNetUserClaims (   
+  Id NUMBER(10) NOT NULL,  
+  UserId VARCHAR2(128) NOT NULL,  
+  ClaimType VARCHAR2(256) NULL,  
+  ClaimValue VARCHAR2(256) NULL  
+ ) pctfree 20 pctused 70 tablespace INCTBL;  
+ create unique index incapp.pk_AspNetUserClaims on incapp.AspNetUserClaims (  
+  id  
+ ) pctfree 10 tablespace incidx;  
+ alter table incapp.AspNetUserClaims add (  
+  constraint pk_AspNetUserClaims  
+  primary key (id)  
+ );  
+ create public synonym AspNetUserClaims for incapp.AspNetUserClaims;  
+ grant select,insert,update,delete on incapp.AspNetUserClaims to webapps;  
+ CREATE SEQUENCE incapp.AspNetUserClaims_SEQ;  
+ create public synonym AspNetUserClaims_SEQ for incapp.AspNetUserClaims_SEQ;  
+ CREATE OR REPLACE TRIGGER incapp.AspNetUserClaims_INS_TRG  
+  BEFORE INSERT ON incapp.AspNetUserClaims  
+  FOR EACH ROW  
+ BEGIN  
+  :NEW.Id := AspNetUserClaims_SEQ.NEXTVAL;  
+ END;  
+ /  
+ CREATE TABLE incapp.AspNetUserLogins (   
+  LoginProvider VARCHAR2(128) NOT NULL,  
+  ProviderKey VARCHAR2(128) NOT NULL,  
+  UserId VARCHAR2(128) NOT NULL  
+ ) pctfree 20 pctused 70 tablespace INCTBL;  
+ create unique index incapp.pk_AspNetUserLogins on incapp.AspNetUserLogins (  
+  LoginProvider, ProviderKey, UserId  
+ ) pctfree 10 tablespace incidx;  
+ alter table incapp.AspNetUserLogins add (  
+  constraint pk_AspNetUserLogins  
+  primary key (LoginProvider, ProviderKey, UserId)  
+ );  
+ create public synonym AspNetUserLogins for incapp.AspNetUserLogins;  
+ grant select,insert,update,delete on incapp.AspNetUserLogins to webapps;  
+ create unique index incapp.RoleNameIndex on incapp.AspNetRoles (  
+  name  
+ ) pctfree 10 tablespace incidx;  
+ alter table incapp.AspNetRoles add (  
+  constraint uq_RoleNameIndex  
+  unique (name)  
+ );  
+ create index incapp.IX_AspNetUserRoles_UserId on incapp.AspNetUserRoles (  
+  UserId  
+ ) pctfree 10 tablespace incidx;  
+ create index incapp.IX_AspNetUserRoles_RoleId on incapp.AspNetUserRoles (  
+  RoleId  
+ ) pctfree 10 tablespace incidx;  
+ create unique index incapp.UserNameIndex on incapp.AspNetUsers (  
+  UserName  
+ ) pctfree 10 tablespace incidx;  
+ create index incapp.IX_AspNetUserClaims_UserId on incapp.AspNetUserClaims (  
+  UserId  
+ ) pctfree 10 tablespace incidx;  
+ create index incapp.IX_AspNetUserLogins_UserId on incapp.AspNetUserLogins (  
+  UserId  
+ ) pctfree 10 tablespace incidx;  
+ ALTER TABLE incapp.AspNetUserRoles  
+  ADD CONSTRAINT FK_UserRoles_Roles FOREIGN KEY (RoleId) REFERENCES incapp.AspNetRoles (Id)  
+  ON DELETE CASCADE;  
+ ALTER TABLE incapp.AspNetUserRoles  
+  ADD CONSTRAINT FK_UserRoles_Users FOREIGN KEY (UserId) REFERENCES incapp.AspNetUsers (Id)  
+  ON DELETE CASCADE;  
+ ALTER TABLE incapp.AspNetUserClaims  
+  ADD CONSTRAINT FK_UserClaims_Users FOREIGN KEY (UserId) REFERENCES incapp.AspNetUsers (Id)  
+  ON DELETE CASCADE;  
+ ALTER TABLE incapp.AspNetUserLogins  
+  ADD CONSTRAINT FK_UserLogins_Users FOREIGN KEY (UserId) REFERENCES incapp.AspNetUsers (Id)  
+  ON DELETE CASCADE;  

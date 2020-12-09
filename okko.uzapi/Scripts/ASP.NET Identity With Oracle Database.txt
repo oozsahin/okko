@@ -1,121 +1,203 @@
-CREATE TABLE incapp.AspNetRoles (   
-  Id VARCHAR2(128) NOT NULL,  
-  Name VARCHAR2(256) NOT NULL  
- ) pctfree 20 pctused 70 tablespace INCTBL;  
- create unique index incapp.pk_aspnetroles on incapp.AspNetRoles (  
-  id  
- ) pctfree 10 tablespace incidx;  
- alter table incapp.AspNetRoles add (  
-  constraint pk_aspnetroles  
-  primary key (id)  
- );  
- create public synonym AspNetRoles for incapp.AspNetRoles;  
- grant select,insert,update,delete on aspnetroles to webapps;  
- CREATE TABLE incapp.AspNetUserRoles (   
-  UserId VARCHAR2(128) NOT NULL,  
-  RoleId VARCHAR2(128) NOT NULL  
- ) pctfree 20 pctused 70 tablespace INCTBL;  
- create unique index incapp.pk_AspNetUserRoles on incapp.AspNetUserRoles (  
-  UserId, RoleId  
- ) pctfree 10 tablespace incidx;  
- alter table incapp.AspNetUserRoles add (  
-  constraint pk_AspNetUserRoles  
-  primary key (UserId, RoleId)  
- );  
- create public synonym AspNetUserRoles for incapp.AspNetUserRoles;  
- grant select,insert,update,delete on incapp.AspNetUserRoles to webapps;  
- CREATE TABLE incapp.AspNetUsers (   
-  Id VARCHAR2(128) NOT NULL,  
-  Email VARCHAR2(256) NULL,  
-  EmailConfirmed NUMBER(1) NOT NULL,  
-  PasswordHash VARCHAR2(256) NULL,  
-  SecurityStamp VARCHAR2(256) NULL,  
-  PhoneNumber VARCHAR2(256) NULL,  
-  PhoneNumberConfirmed NUMBER(1) NOT NULL,  
-  TwoFactorEnabled NUMBER(1) NOT NULL,  
-  LockoutEndDateUtc TIMESTAMP(7) NULL,  
-  LockoutEnabled NUMBER(1) NOT NULL,  
-  AccessFailedCount NUMBER(10) NOT NULL,  
-  UserName VARCHAR2(256) NOT NULL  
- ) pctfree 20 pctused 70 tablespace INCTBL;  
- create unique index incapp.pk_AspNetUsers on incapp.AspNetUsers (  
-  id  
- ) pctfree 10 tablespace incidx;  
- alter table incapp.AspNetUsers add (  
-  constraint pk_AspNetUsers  
-  primary key (id)  
- );  
- create public synonym AspNetUsers for incapp.AspNetUsers;  
- grant select,insert,update,delete on incapp.AspNetUsers to webapps;  
- CREATE TABLE AspNetUserClaims (   
-  Id NUMBER(10) NOT NULL,  
-  UserId VARCHAR2(128) NOT NULL,  
-  ClaimType VARCHAR2(256) NULL,  
-  ClaimValue VARCHAR2(256) NULL  
- ) pctfree 20 pctused 70 tablespace INCTBL;  
- create unique index incapp.pk_AspNetUserClaims on incapp.AspNetUserClaims (  
-  id  
- ) pctfree 10 tablespace incidx;  
- alter table incapp.AspNetUserClaims add (  
-  constraint pk_AspNetUserClaims  
-  primary key (id)  
- );  
- create public synonym AspNetUserClaims for incapp.AspNetUserClaims;  
- grant select,insert,update,delete on incapp.AspNetUserClaims to webapps;  
- CREATE SEQUENCE incapp.AspNetUserClaims_SEQ;  
- create public synonym AspNetUserClaims_SEQ for incapp.AspNetUserClaims_SEQ;  
- CREATE OR REPLACE TRIGGER incapp.AspNetUserClaims_INS_TRG  
-  BEFORE INSERT ON incapp.AspNetUserClaims  
-  FOR EACH ROW  
- BEGIN  
-  :NEW.Id := AspNetUserClaims_SEQ.NEXTVAL;  
- END;  
- /  
- CREATE TABLE incapp.AspNetUserLogins (   
-  LoginProvider VARCHAR2(128) NOT NULL,  
-  ProviderKey VARCHAR2(128) NOT NULL,  
-  UserId VARCHAR2(128) NOT NULL  
- ) pctfree 20 pctused 70 tablespace INCTBL;  
- create unique index incapp.pk_AspNetUserLogins on incapp.AspNetUserLogins (  
-  LoginProvider, ProviderKey, UserId  
- ) pctfree 10 tablespace incidx;  
- alter table incapp.AspNetUserLogins add (  
-  constraint pk_AspNetUserLogins  
-  primary key (LoginProvider, ProviderKey, UserId)  
- );  
- create public synonym AspNetUserLogins for incapp.AspNetUserLogins;  
- grant select,insert,update,delete on incapp.AspNetUserLogins to webapps;  
- create unique index incapp.RoleNameIndex on incapp.AspNetRoles (  
-  name  
- ) pctfree 10 tablespace incidx;  
- alter table incapp.AspNetRoles add (  
-  constraint uq_RoleNameIndex  
-  unique (name)  
- );  
- create index incapp.IX_AspNetUserRoles_UserId on incapp.AspNetUserRoles (  
-  UserId  
- ) pctfree 10 tablespace incidx;  
- create index incapp.IX_AspNetUserRoles_RoleId on incapp.AspNetUserRoles (  
-  RoleId  
- ) pctfree 10 tablespace incidx;  
- create unique index incapp.UserNameIndex on incapp.AspNetUsers (  
-  UserName  
- ) pctfree 10 tablespace incidx;  
- create index incapp.IX_AspNetUserClaims_UserId on incapp.AspNetUserClaims (  
-  UserId  
- ) pctfree 10 tablespace incidx;  
- create index incapp.IX_AspNetUserLogins_UserId on incapp.AspNetUserLogins (  
-  UserId  
- ) pctfree 10 tablespace incidx;  
- ALTER TABLE incapp.AspNetUserRoles  
-  ADD CONSTRAINT FK_UserRoles_Roles FOREIGN KEY (RoleId) REFERENCES incapp.AspNetRoles (Id)  
-  ON DELETE CASCADE;  
- ALTER TABLE incapp.AspNetUserRoles  
-  ADD CONSTRAINT FK_UserRoles_Users FOREIGN KEY (UserId) REFERENCES incapp.AspNetUsers (Id)  
-  ON DELETE CASCADE;  
- ALTER TABLE incapp.AspNetUserClaims  
-  ADD CONSTRAINT FK_UserClaims_Users FOREIGN KEY (UserId) REFERENCES incapp.AspNetUsers (Id)  
-  ON DELETE CASCADE;  
- ALTER TABLE incapp.AspNetUserLogins  
-  ADD CONSTRAINT FK_UserLogins_Users FOREIGN KEY (UserId) REFERENCES incapp.AspNetUsers (Id)  
-  ON DELETE CASCADE;  
+create table AspNetRoleClaims
+(
+  Id         NUMBER(10) not null,
+  RoleId     VARCHAR2(450) not null,
+  ClaimType  VARCHAR2(2000),
+  ClaimValue VARCHAR2(2000)
+);
+create table AspNetRoles
+(
+  Id               VARCHAR2(450) not null,
+  Name             VARCHAR2(256),
+  NormalizedName   VARCHAR2(256),
+  ConcurrencyStamp VARCHAR2(2000)
+);
+create table AspNetUserClaims
+(
+  Id         NUMBER(10) not null,
+  UserId     VARCHAR2(450) not null,
+  ClaimType  VARCHAR2(4000),
+  ClaimValue VARCHAR2(4000)
+);
+create table AspNetUserLogins
+(
+  LoginProvider       VARCHAR2(450) not null,
+  ProviderKey         VARCHAR2(450) not null,
+  ProviderDisplayName VARCHAR2(4000),
+  UserId              VARCHAR2(450) not null
+);
+create table AspNetUserRoles
+(
+  UserId VARCHAR2(450) not null,
+  RoleId VARCHAR2(450) not null
+);
+-- Create table
+create table AspNetUserTokens
+(
+  UserId        VARCHAR2(450) not null,
+  LoginProvider VARCHAR2(450) not null,
+  Name          VARCHAR2(450) not null,
+  Value         VARCHAR2(4000)
+);
+create table AspNetUsers
+(
+  Id                   VARCHAR2(450) not null,
+  UserName             VARCHAR2(256),
+  NormalizedUserName   VARCHAR2(256),
+  Email                VARCHAR2(256),
+  NormalizedEmail      VARCHAR2(256),
+  EmailConfirmed       VARCHAR2(1) not null,
+  PasswordHash         VARCHAR2(4000),
+  SecurityStamp        VARCHAR2(4000),
+  ConcurrencyStamp     VARCHAR2(4000),
+  PhoneNumber          VARCHAR2(4000),
+  PhoneNumberConfirmed VARCHAR2(1) not null,
+  TwoFactorEnabled     VARCHAR2(1) not null,
+  LockoutEnd           DATE,
+  LockoutEnabled       VARCHAR2(1) not null,
+  AccessFailedCount    INTEGER not null
+);
+
+
+create table Deposits
+(
+  Id              NUMBER(10) not null,
+  branch          CHAR(5),
+  id_client       CHAR(8),
+  date_open       DATE,
+  name            VARCHAR2(80),
+  balance_account VARCHAR2(10),
+  currency_code   VARCHAR2(5),
+  s30             NUMBER(18,2),
+  id_client2      CHAR(8),
+  code_subject    CHAR(1),
+  file_name       VARCHAR2(50),
+  file_name2      VARCHAR2(50),
+  deposit_type    VARCHAR2(3)
+);
+alter table Deposits
+  add constraint PK_Deposits primary key (ID) using index;
+
+create table Persons
+(
+  Id        NUMBER(10) not null,
+  Firstname VARCHAR2(100),
+  Lastname  VARCHAR2(100),
+  Title     VARCHAR2(100),
+  Position  VARCHAR2(100),
+  Location  VARCHAR2(100),
+  ipt       VARCHAR2(100),
+  CelPhone  VARCHAR2(100)
+);
+alter table Persons
+  add constraint PK_Persons primary key (ID)
+  using index;
+  
+  
+create index IX_AspNetRoleClaims_RoleId on AspNetRoleClaims (RoleId);
+alter table AspNetRoleClaims
+  add constraint PK_AspNetRoleClaims primary key (ID) using index;
+  
+create unique index RoleNameIndex on AspNetRoles (NormalizedName);
+alter table AspNetRoles
+  add constraint PK_AspNetRoles primary key (ID) using index;
+  
+create index IX_AspNetUserClaims_UserId on AspNetUserClaims (UserId);
+alter table AspNetUserClaims
+  add constraint PK_AspNetUserClaims primary key (ID) using index;
+
+create index IX_AspNetUserLogins_UserId on AspNetUserLogins (UserId);
+alter table AspNetUserLogins
+  add constraint PK_AspNetUserLogins primary key (LOGINPROVIDER, PROVIDERKEY) using index;
+create index IX_AspNetUserRoles_RoleId on AspNetUserRoles (RoleId);
+alter table AspNetUserRoles
+  add constraint PK_AspNetUserRoles primary key (USERID, ROLEID)
+  using index;
+alter table AspNetUserTokens
+  add constraint PK_AspNetUserTokens primary key (USERID, LOGINPROVIDER, NAME)
+  using index;
+create index EmailIndex on AspNetUsers (NormalizedEmail);
+create unique index UserNameIndex on AspNetUsers (NormalizedUserName);
+alter table AspNetUsers
+  add constraint PK_AspNetUsers primary key (ID)
+  using index;  
+  
+alter table AspNetUserTokens
+  add constraint FK_AspNetUserTokensAspNetUsers foreign key (USERID)
+  references AspNetUsers (ID) on delete cascade; 
+alter table AspNetUserRoles
+  add constraint FK_AspNetUserRolesAspNetRoles foreign key (ROLEID)
+  references AspNetRoles (ID) on delete cascade;
+alter table AspNetUserRoles
+  add constraint FK_AspNetUserRolesAspNetUsers foreign key (USERID)
+  references AspNetUsers (ID) on delete cascade;  
+alter table AspNetUserLogins
+  add constraint FK_AspNetUserLoginsAspNetUsers foreign key (USERID)
+  references AspNetUsers (ID) on delete cascade;  
+alter table AspNetUserClaims
+  add constraint FK_AspNetUserClaimsAspNetUsers foreign key (USERID)
+  references AspNetUsers (ID) on delete cascade;    
+alter table AspNetRoleClaims
+  add constraint FK_AspNetRoleClaimsAspNetRoles foreign key (ROLEID)
+  references AspNetRoles (ID) on delete cascade;
+  
+create sequence PERSONS_SEQ
+minvalue 1
+maxvalue 9999999999999999999999999999
+start with 1
+increment by 1
+cache 20;  
+
+-- Create sequence 
+create sequence DEPOSISTS_SEQ
+minvalue 1
+maxvalue 9999999999999999999999999999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence ASPNETUSERCLAIMS_SEQ
+minvalue 1
+maxvalue 9999999999999999999999999999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence ASPNETROLECLAIMS_SEQ
+minvalue 1
+maxvalue 9999999999999999999999999999
+start with 1
+increment by 1
+cache 20;
+  
+CREATE OR REPLACE TRIGGER PERSONS_INS_TRG
+BEFORE INSERT ON PERSONS FOR EACH ROW
+BEGIN
+  :new.id := PERSONS_SEQ.NEXTVAL;
+END;
+
+CREATE OR REPLACE TRIGGER DEPOSITS_INS_TRG
+BEFORE INSERT ON DEPOSITS FOR EACH ROW
+BEGIN
+  :new.id := DEPOSISTS_SEQ.NEXTVAL;
+END;
+
+CREATE OR REPLACE TRIGGER ASPNETUSERCLAIMS_INS_TRG
+BEFORE INSERT ON ASPNETUSERCLAIMS FOR EACH ROW
+BEGIN
+  :new.id := ASPNETUSERCLAIMS_SEQ.NEXTVAL;
+END;
+
+CREATE OR REPLACE TRIGGER ASPNETROLECLAIMS_INS_TRG
+BEFORE INSERT ON ASPNETROLECLAIMS FOR EACH ROW
+BEGIN
+  :new.id := ASPNETROLECLAIMS_SEQ.NEXTVAL;
+END;
+
+
+
+
+
+

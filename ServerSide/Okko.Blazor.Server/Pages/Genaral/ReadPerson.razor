@@ -1,0 +1,116 @@
+﻿@page "/readperson"
+@inject IPersonEndpoint personData
+
+<h3>Read Person</h3>
+
+@if (persons == null)
+{
+    <h4>Loading...</h4>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date of Birth</th>
+                        <th>Title</th>
+                        <th>Title Position</th>
+                        <th>Locationh</th>
+                        <th>IP Phone Number</th>
+                        <th>Cell Phone Number</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in persons)
+                    {
+                        <tr>
+                            <td>@p.Id</td>
+                            <td>@p.Firstname</td>
+                            <td>@p.Lastname</td>
+                            <td>@p.DateOfBirth</td>
+                            <td>@p.Title</td>
+                            <td>@p.Position</td>
+                            <td>@p.Location</td>
+                            <td>@p.IPT</td>
+                            <td>@p.CellPhone</td>
+                            <td>
+                                <button class="btn btn-primary mx-2" @onclick="(() => UpdatePerson(p.Id))">
+                                    Update
+                                </button>
+                                @if (idToDelete == p.Id)
+                                {
+                                    <button class="btn btn-danger mx-2" @onclick="(() => DeletePerson(p.Id))">
+                                        Confirm Delete
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-danger mx-2" @onclick="(() => idToDelete = p.Id)">
+                                        Delete
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            @if (showEditForm)
+            {
+                <UpdatePerson Id="@idToUpdate" OnUpdate="HandleOnUpdate"></UpdatePerson>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private List<IPersonModel> persons;
+    private bool showEditForm = false;
+    private int idToUpdate = 0;
+    private int idToDelete = 0;
+
+    private void UpdatePerson(int id)
+    {
+        idToUpdate = id;
+        showEditForm = true;
+    }
+
+    private async Task DeletePerson(int id)
+    {
+        await personData.DeletePerson(id);
+        persons.Remove(persons.Where(x => x.Id == id).FirstOrDefault());
+        idToDelete = 0;
+    }
+
+    private void HandleOnUpdate(IPersonModel person)
+    {
+        showEditForm = false;
+
+        var p = persons.Where(x => x.Id == person.Id).FirstOrDefault();
+
+        if (p != null)
+        {
+            person.Firstname = p.Firstname;
+            person.Lastname = p.Lastname;
+            person.IPT = p.IPT;
+            person.CellPhone = p.CellPhone;
+            person.LocationId = p.LocationId;
+            person.TitleId = p.TitleId;
+            person.PositionId = p.PositionId;
+            person.DateOfBirth = p.DateOfBirth;
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        persons = await personData.ReadPerson();
+    }
+
+}

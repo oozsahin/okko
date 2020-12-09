@@ -8,7 +8,7 @@ using okko.uzapi.Contracts;
 
 namespace okko.uzapi.Controllers
 {
-    [Route("api/v{version:apiVersion}/deposits")]
+    [Route("api/v{version:apiVersion}/controller")]
     [ApiVersion("2.0")]
     [ApiController]
     public class HomeV2Controller : ControllerBase

@@ -1,0 +1,74 @@
+﻿@page "/updateperson"
+@inject IPersonEndpoint personData
+
+<EditForm Model="@person" OnValidSubmit="HandleValidSubmit">
+    <div class="form-group">
+        <label>First Name</label>
+        <InputText @bind-Value="person.Firstname" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Last Name</label>
+        <InputText @bind-Value="person.Lastname" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Date Of Birth</label>
+        <InputDate @bind-Value="person.DateOfBirth" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Title</label>
+        <InputSelect @bind-Value="person.Title" class="form-control">
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <label>Title Position</label>
+        <InputSelect @bind-Value="person.Position" class="form-control">
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <label>Location</label>
+        <InputSelect @bind-Value="person.Location" class="form-control">
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <label>IP Telefon Number</label>
+        <InputText @bind-Value="person.IPT" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Cell Phone Number</label>
+        <InputText @bind-Value="person.CellPhone" class="form-control" />
+    </div>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <button class="btn btn-primary" type="submit">Update Person</button>
+</EditForm>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public EventCallback<IPersonModel> OnUpdate { get; set; }
+
+    private IPersonModel person = new DisplayPersonModel();
+
+    private async Task HandleValidSubmit()
+    {
+        await personData.UpdatePerson(person,"oozsahin");
+        await OnUpdate.InvokeAsync(person);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var p = await personData.ReadPerson(Id);
+
+        person.Id = p.Id;
+        person.Firstname = p.Firstname;
+        person.Lastname = p.Lastname;
+        person.IPT = p.IPT;
+        person.CellPhone = p.CellPhone;
+        person.LocationId = p.LocationId;
+        person.TitleId = p.TitleId;
+        person.PositionId = p.PositionId;
+        person.DateOfBirth = p.DateOfBirth;
+    }
+}
+

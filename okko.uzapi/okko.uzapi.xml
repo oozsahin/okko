@@ -23,5 +23,91 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:okko.uzapi.Controllers.PersonsController">
+            <summary>
+            Endpoint used to interact with the Persons 
+            </summary>
+        </member>
+        <member name="M:okko.uzapi.Controllers.PersonsController.GetPersons">
+            <summary>
+            Get All Persons
+            </summary>
+            <returns>List Of Persons</returns>
+        </member>
+        <member name="M:okko.uzapi.Controllers.PersonsController.GetPerson(System.Int32)">
+            <summary>
+            Get An Person by Id
+            </summary>
+            <param name="id"></param>
+            <returns>A Person's record</returns>
+        </member>
+        <member name="M:okko.uzapi.Controllers.PersonsController.Create(okko.uzapi.Models.Persons)">
+            <summary>
+            Creates A Person
+            </summary>
+            <param name="personsDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:okko.uzapi.Controllers.PersonsController.Update(okko.uzapi.Models.Persons)">
+            <summary>
+            Updates A Person
+            </summary>
+            <param name="id"></param>
+            <param name="personDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:okko.uzapi.Controllers.PersonsController.Delete(okko.uzapi.Models.Persons)">
+            <summary>
+            Removes an person by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:okko.uzapi.Controllers.UsersController.Register(okko.uzapi.DTOs.UserDtd)">
+            <summary>
+            USer Registration Endpoint
+            </summary>
+            <param name="userDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:okko.uzapi.Controllers.UsersController.Login(okko.uzapi.DTOs.UserDtd)">
+            <summary>
+            User Login Endpoint
+            </summary>
+            <param name="userDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:okko.uzapi.Services.DepositRepository.GetDeposits(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="openDate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:UZMiswebapi.Controllers.DepositController.GetDeposits(okko.uzapi.DTOs.DepositDto)">
+            <summary>
+            Get list of Deposits v1.
+            </summary>
+            <returns>Deposits</returns>
+        </member>
+        <member name="M:UZMiswebapi.Controllers.DepositController.GetUzClientType">
+            <summary>
+            Get list of client type v1
+            </summary>
+            <returns>client type</returns>
+        </member>
+        <member name="M:UZMiswebapi.Controllers.DepositController.GetSomeDeposits(okko.uzapi.DTOs.DepositDto)">
+            <summary>
+            Get list of deposits with criteria v1
+            </summary>
+            <param name="model"></param>
+            <returns>deposits</returns>
+        </member>
+        <member name="M:UZMiswebapi.Controllers.DepositV2Controller.GetDeposits(okko.uzapi.DTOs.DepositDto)">
+            <summary>
+            Get list of Deposits v2.
+            </summary>
+            <returns>Deposits</returns>
+        </member>
     </members>
 </doc>

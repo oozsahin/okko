@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using okko.uzapi.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace okko.uzapi
 {
@@ -38,6 +39,19 @@ namespace okko.uzapi
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBContext>();
+
+            services.Configure<IdentityOptions>(options => {
+
+                options.Password.RequiredLength = 3;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = false;
+
+                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+
+                options.SignIn.RequireConfirmedEmail = false;
+
+            });
 
             services.AddCors(o => {
                 o.AddPolicy("CorsPolicy",
@@ -78,7 +92,9 @@ namespace okko.uzapi
             //});
 
             services.AddSingleton<ILoggerService, LoggerService>();
-            services.AddSingleton<IEmailSender, SmtpEmailSender>();
+            services.AddSingleton<IEmailService, EmailService>();
+            services.AddScoped<IDepositRepository, DepositRepository>();
+            services.AddScoped<IDataAccess, OracleDb>();
             //services.AddScoped<IAuthorRepository, AuthorRepository>();
             //services.AddScoped<IBookRepository, BookRepository>();
 

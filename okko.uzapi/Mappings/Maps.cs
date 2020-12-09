@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using okko.uzapi.DTOs;
-using okko.uzapi.Migrations;
+using okko.uzapi.Models;
 
 namespace okko.uzapi.Mappings
 {
@@ -8,8 +8,10 @@ namespace okko.uzapi.Mappings
     {
         public Maps()
         {
-            CreateMap<Persons, PersonsDTO>().ReverseMap();
+            CreateMap<Persons, PersonsDto>().ReverseMap();
             CreateMap<Persons, PersonsCreateDTO>().ReverseMap();
+            CreateMap<Persons, PersonsUpdateDTO>().ReverseMap();
+            CreateMap<Deposit, DepositDto>().ReverseMap();
         }   
     }
 }

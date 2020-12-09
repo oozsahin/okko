@@ -1,0 +1,77 @@
+﻿@page "/createperson"
+@inject IPersonEndpoint personData
+
+<h3>Create Person</h3>
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="@person" OnInvalidSubmit="HandleValidSubmit">
+            <div class="form-group">
+                <div class="col-2">
+                    <label>First Name</label>
+                </div>
+                <div class="col-2">
+                    <InputText @bind-Value="person.Firstname" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <div>
+                    <InputText @bind-Value="person.Lastname" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Date Of Birth</label>
+                <div>
+                    <InputDate @bind-Value="person.DateOfBirth" class="form-control" />
+                </div>            
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <div>
+                    <InputSelect @bind-Value="person.Title" class="form-control">
+                </InputSelect>
+                </div>               
+            </div>
+            <div class="form-group">
+                <label>Title Position</label>
+                <div>
+                    <InputSelect @bind-Value="person.Position" class="form-control">
+                    </InputSelect>
+                </div>             
+            </div>
+            <div class="form-group">
+                <label>Location</label> 
+                <div>
+                    <InputSelect @bind-Value="person.Location" class="form-control">
+                    </InputSelect>
+                </div>               
+            </div>
+            <div class="form-group">
+                <label>IP Telefon Number</label>
+                <div>
+                    <InputText @bind-Value="person.IPT" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Cell Phone Number</label>
+                <div>
+                    <InputText @bind-Value="person.CellPhone" class="form-control" />
+                </div>            
+            </div>
+            <button class="btn btn-primary" type="submit">Create Person</button>
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+        </EditForm>
+    </div>
+</div>
+
+
+@code {
+    IPersonModel person = new DisplayPersonModel();
+
+    private async Task HandleValidSubmit()
+    {
+        await personData.CreatePerson(person, "oozsahin");
+        person = new DisplayPersonModel();
+    }
+}
